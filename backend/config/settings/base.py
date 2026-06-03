@@ -1,0 +1,141 @@
+from pathlib import Path
+import os
+
+import environ  # type: ignore
+
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+env = environ.Env()
+
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+SECRET_KEY = env("SECRET_KEY")
+
+DEBUG = env.bool("DEBUG", default=False)
+
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+
+# --------------------------------------------------
+# Applications
+# --------------------------------------------------
+
+DJANGO_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+]
+
+THIRD_PARTY_APPS = [
+    "rest_framework",
+    "corsheaders",
+    "django_filters",
+    "drf_spectacular",
+    "django_extensions",
+]
+
+LOCAL_APPS: list[str] = []
+
+INSTALLED_APPS = (
+    DJANGO_APPS
+    + THIRD_PARTY_APPS
+    + LOCAL_APPS
+)
+
+# --------------------------------------------------
+# Middleware
+# --------------------------------------------------
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+ROOT_URLCONF = "config.urls"
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+WSGI_APPLICATION = "config.wsgi.application"
+
+# --------------------------------------------------
+# Database
+# --------------------------------------------------
+
+DATABASES = {
+    "default": env.db(
+        "DATABASE_URL",
+        default="sqlite:///db.sqlite3"
+    )
+}
+
+# --------------------------------------------------
+# Password Validation
+# --------------------------------------------------
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+]
+
+# --------------------------------------------------
+# Internationalization
+# --------------------------------------------------
+
+LANGUAGE_CODE = "en-us"
+
+TIME_ZONE = "Asia/Kathmandu"
+
+USE_I18N = True
+USE_TZ = True
+
+# --------------------------------------------------
+# Static & Media
+# --------------------------------------------------
+
+STATIC_URL = "/static/"
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# --------------------------------------------------
+# DRF
+# --------------------------------------------------
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS":
+        "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "HamroBBA API",
+    "DESCRIPTION": "Backend API for HamroBBA",
+    "VERSION": "1.0.0",
+}
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
