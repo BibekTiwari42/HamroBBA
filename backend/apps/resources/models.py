@@ -13,7 +13,7 @@ class Resource(models.Model):
 
     subject = models.ForeignKey(
         Subject,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT, ##Prevents accidental deletion of a subject that deletes all PDFs
         related_name="resources"
     )
 
@@ -26,15 +26,28 @@ class Resource(models.Model):
         max_length=50,
         choices=ResourceType.choices
     )
+    
 
     file = models.FileField(upload_to="resources/pdfs/")
 
-    file_size = models.IntegerField(blank=True, null=True)
+    file_size = models.BigIntegerField(blank=True, null=True)
 
     is_published = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=["slug"]),
+            models.Index(fields=["subject"]),
+            models.Index(fields=["resource_type"]),
+            models.Index(fields=["created_at"]),
+        ]
+    def save(self, *args, **kwargs):
+        if self.file and not self.file_size:
+            self.file_size = self.file.size
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return self.title

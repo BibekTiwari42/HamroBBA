@@ -9,6 +9,9 @@ class Semester(models.Model):
 
     class Meta:
         ordering = ["order"]
+        indexes = [
+            models.Index(fields=["slug"]),
+        ]
 
     def __str__(self):
         return self.name
@@ -20,11 +23,16 @@ class Subject(models.Model):
         on_delete=models.CASCADE,
         related_name="subjects"
     )
-
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=20)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True, null=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["slug"]),
+            models.Index(fields=["semester"]),
+        ]
 
     def __str__(self):
         return self.name
