@@ -36,7 +36,13 @@ THIRD_PARTY_APPS = [
     "django_extensions",
 ]
 
-LOCAL_APPS: list[str] = []
+LOCAL_APPS = [
+    "apps.accounts",
+    "apps.academics",
+    "apps.resources",
+    "apps.common",
+    "apps.search",
+]
 
 INSTALLED_APPS = (
     DJANGO_APPS
