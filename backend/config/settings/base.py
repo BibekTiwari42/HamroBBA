@@ -148,6 +148,17 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "EXCEPTION_HANDLER": "apps.common.exceptions.custome_exception_handler",
+   
+   ## Throttling
+   ## rate-limiting mechanism that controld how many requests a user
+   ## /client can make in a give time period.
+    
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest-framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "1000/day",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -176,3 +187,11 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+## Cashing config
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "hamrobba-cache",
+    }
+}
