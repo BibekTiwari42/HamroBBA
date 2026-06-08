@@ -142,6 +142,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "EXCEPTION_HANDLER": "apps.common.exceptions.custome_exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {
@@ -163,4 +164,10 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "USER_ID_FIELD": "id",
 }
+
+## CORS Configuration 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
