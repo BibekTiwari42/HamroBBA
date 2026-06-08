@@ -3,6 +3,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Resource
 from .serializers import ResourceSerializer
 from apps.common.permissions import IsAdminUserOnly
+from django.http import FileResponse, Http404
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+
 
 
 class ResourceViewSet(viewsets.ModelViewSet):
@@ -33,3 +37,24 @@ class ResourceViewSet(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update", "destroy"]:
             return [IsAdminUserOnly()]
         return [permissions.IsAuthenticated()]
+    
+    
+class SecureResourceDownloadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            resource = Resource.objects.get(pk=pk)
+        except Resource.DoesNotExist:
+            raise Http404("Resource not found or not published.")
+        
+        # Optional: role-based restriction (can extend later)
+        if not resource.is_published:
+            return Response({"detail": "Resource is not published."}, status=403)
+        
+        file_path = resource.file.path
+        
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{resource.title}.pdf"'
+        
+        return response
