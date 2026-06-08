@@ -6,12 +6,25 @@ from apps.common.permissions import IsAdminUserOnly
 from django.http import FileResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from apps.common.responses import success_response
 
 
 
 class ResourceViewSet(viewsets.ModelViewSet):
-    queryset = Resource.objects.select_related("subject", "subject__semester").all()
+    queryset = Resource.objects.select_related(
+    "subject",
+    "subject__semester"
+    ).all().order_by("-created_at")
+    
     serializer_class = ResourceSerializer
+    
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        
+        return Response(
+            success_response(response.data)
+        )
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
