@@ -147,14 +147,14 @@ REST_FRAMEWORK = {
     ],    
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
-    "EXCEPTION_HANDLER": "apps.common.exceptions.custome_exception_handler",
+    "EXCEPTION_HANDLER": "apps.common.exceptions.custom_exception_handler",
    
    ## Throttling
    ## rate-limiting mechanism that controld how many requests a user
    ## /client can make in a give time period.
     
     "DEFAULT_THROTTLE_CLASSES": [
-        "rest-framework.throttling.UserRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
         "user": "1000/day",
@@ -194,4 +194,41 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "hamrobba-cache",
     }
+}
+
+## logging configuration
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/app.log",
+            "formatter": "verbose",
+        },
+
+        "error_file": {
+            "level": "ERROR",
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "logs/error.log",
+            "formatter": "verbose",
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["file", "error_file"],
+            "level": "INFO",
+            "propagate": True,
+        },
+    },
 }
