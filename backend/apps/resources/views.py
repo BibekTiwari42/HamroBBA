@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from apps.common.responses import success_response
 
 
-
 class ResourceViewSet(viewsets.ModelViewSet):
     queryset = Resource.objects.select_related(
     "subject",
@@ -22,9 +21,11 @@ class ResourceViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         
-        return Response(
-            success_response(response.data)
-        )
+        for item in response.data["results"]:
+            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+        
+        return Response(response.data)
+        
 
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
 
@@ -69,5 +70,31 @@ class SecureResourceDownloadView(APIView):
         
         response = FileResponse(open(file_path, 'rb'))
         response['Content-Disposition'] = f'attachment; filename="{resource.title}.pdf"'
+        
+        return response
+    
+
+## secure streaming endpoint
+
+class ResourceStreamView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        try:
+            resource = Resource.objects.get(pk=pk)
+        except Resource.DoesNotExist:
+            raise Http404("Resource not found or not published.")
+        
+        if not resource.allow_preview:
+            return Response({"detail": "Preview not available."}, status=403)
+        
+        file_path = resource.file.path
+        
+        response = FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+        
+        if resource.viewer_type == "inline":
+             response['Content-Disposition'] = f'inline; filename="{resource.title}.pdf"'
+        else:
+             response['Content-Disposition'] = f'attachment; filename="{resource.title}.pdf"'
         
         return response

@@ -27,6 +27,17 @@ class Resource(models.Model):
         choices=ResourceType.choices
     )
     
+    viewer_type = models.CharField(
+        max_length=50,
+        choices=[
+            ("inline", "Inline Viewer"),
+            ("download", "Download Only"),
+        ]
+        default="inline"
+    )
+    
+    allow_preview = models.BooleanField(default=True)
+    
 
     file = models.FileField(upload_to="resources/pdfs/",
                             storage=PrivateMediaStorage())
