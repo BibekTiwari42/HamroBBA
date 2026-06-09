@@ -1,7 +1,7 @@
 from django.db import models
 from apps.academics.models import Subject
 
-
+from config.storage import PrivateMediaStorage
 class Resource(models.Model):
 
     class ResourceType(models.TextChoices):
@@ -28,7 +28,9 @@ class Resource(models.Model):
     )
     
 
-    file = models.FileField(upload_to="resources/pdfs/")
+    file = models.FileField(upload_to="resources/pdfs/",
+                            storage=PrivateMediaStorage())
+
 
     file_size = models.BigIntegerField(blank=True, null=True)
 

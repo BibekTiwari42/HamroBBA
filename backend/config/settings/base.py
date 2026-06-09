@@ -35,6 +35,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "django_extensions",
     "rest_framework_simplejwt.token_blacklist",
+    "storages",
 ]
 
 LOCAL_APPS = [
@@ -240,3 +241,16 @@ LOGGING = {
         },
     },
 }
+
+
+## AWS S3 Storage Configuration
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_DEFAULT_ACL = None
+AWS_QUERYSTRING_AUTH = True
+AWS_S3_FILE_OVERWRITE = False
+
+# AWS S3 Credentials (for production use)
+AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
+AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="us-east-1")
+AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID", default="")
+AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY", default="")
