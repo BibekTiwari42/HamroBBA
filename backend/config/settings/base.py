@@ -148,6 +148,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
     "EXCEPTION_HANDLER": "apps.common.exceptions.custom_exception_handler",
+    
+    ## This setting specifies the default schema class used by DRF Spectacular to generate API documentation.
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
    
    ## Throttling
    ## rate-limiting mechanism that controld how many requests a user
@@ -163,8 +166,13 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "HamroBBA API",
-    "DESCRIPTION": "Backend API for HamroBBA",
+    "DESCRIPTION": "Backend API for HamroBBA academic resource platform",
     "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
