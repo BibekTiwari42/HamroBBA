@@ -32,7 +32,7 @@ class Resource(models.Model):
         choices=[
             ("inline", "Inline Viewer"),
             ("download", "Download Only"),
-        ]
+        ],
         default="inline"
     )
     
