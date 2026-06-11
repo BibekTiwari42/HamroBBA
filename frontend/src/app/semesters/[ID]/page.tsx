@@ -1,39 +1,41 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Link from "next/link";
 import { getSubjectsBySemester } from "@/services/academics.service";
 
 type Props = {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 };
 
-export default async function SemesterPage({ params }: Props) {
-  const subjects = await getSubjectsBySemester(params.id);
+export default async function SemesterPage({
+  params,
+}: Props) {
+  const { id } = await params;
+
+  const subjects =
+    await getSubjectsBySemester(id);
+
+//   console.log("Semester ID:", id);
 
   return (
     <>
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-12">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Semester {params.id}
+        <h1 className="text-3xl font-bold">
+          Semester {id}
         </h1>
 
-        <p className="mt-2 text-gray-600">
-          Subjects available in this semester
-        </p>
-
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {subjects.map((subject: any) => (
-            <div
-              key={subject.id}
-              className="rounded-lg border border-gray-200 p-4 hover:shadow-md"
+        <div className="mt-8 grid gap-4">
+          {subjects.map((s: any) => (
+            <Link
+              key={s.id}
+              href={`/subjects/${s.id}`}
             >
-              <h3 className="font-semibold text-gray-800">
-                {subject.name}
-              </h3>
-            </div>
+              <div className="rounded-lg border p-4">
+                {s.name}
+              </div>
+            </Link>
           ))}
         </div>
       </main>
