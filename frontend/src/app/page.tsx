@@ -35,14 +35,13 @@ export default async function HomePage() {
           </h2>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {semesters.map(
-              (semester) => (
-                <SemesterCard
-                  key={semester.id}
-                  title={semester.name}
-                />
-              )
-            )}
+            {semesters.map((semester) => (
+            <SemesterCard
+            key={semester.id}
+           id={semester.id}
+           title={semester.name}
+          />
+        ))}
           </div>
         </section>
       </main>
