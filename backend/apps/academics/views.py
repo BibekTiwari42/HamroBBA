@@ -40,6 +40,7 @@ class SubjectViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Subject.objects.select_related("semester").all()
     serializer_class = SubjectSerializer
     permission_classes = [AllowAny]
+    lookup_field = "slug"
 
     @action(detail=False, methods=["get"])
     def by_slug(self, request):
