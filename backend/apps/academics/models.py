@@ -27,6 +27,18 @@ class Subject(models.Model):
     code = models.CharField(max_length=20)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True, null=True)
+    syllabus = models.JSONField(
+        default=dict,
+        blank=True,
+        null=True,
+        help_text="Syllabus structure with units and topics"
+    )
+    past_questions = models.JSONField(
+        default=dict,
+        blank=True,
+        null=True,
+        help_text="Past year questions grouped by year"
+    )
 
     class Meta:
         indexes = [

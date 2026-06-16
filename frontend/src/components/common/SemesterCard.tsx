@@ -1,16 +1,16 @@
 import Link from "next/link";
 
 type SemesterCardProps = {
-  id: number;
+  slug: string;
   title: string;
 };
 
 export default function SemesterCard({
-  id,
+  slug,
   title,
 }: SemesterCardProps) {
   return (
-    <Link href={`/semesters/${id}`}>
+    <Link href={`/semester/${slug}`}>
       <div className="rounded-xl border border-gray-200 bg-white p-6 transition hover:border-blue-300 hover:shadow-md cursor-pointer">
         <h3 className="text-lg font-semibold text-gray-800">
           {title}

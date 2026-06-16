@@ -15,7 +15,7 @@ export default async function SemesterPage({
   const subjects =
     await getSubjectsBySemester(id);
 
-//   console.log("Semester ID:", id);
+  console.log("Semester ID:", id);
 
   return (
     <>

@@ -5,7 +5,16 @@ from .models import Semester, Subject
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "code",
+            "slug",
+            "description",
+            "syllabus",
+            "past_questions",
+            "semester"
+        ]
 
 
 class SemesterSerializer(serializers.ModelSerializer):
@@ -13,4 +22,11 @@ class SemesterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Semester
-        fields = "__all__"
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "order",
+            "description",
+            "subjects"
+        ]
