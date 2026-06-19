@@ -1,7 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SemesterCard from "@/components/common/SemesterCard";
-import { getSemesters } from "@/services/academics.service";
+import { getSemesters } from "@/lib/api/academics";
 
 export default async function HomePage() {
   let semesters: any[] = [];

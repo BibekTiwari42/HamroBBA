@@ -2,10 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SubjectCard from "@/components/resource/SubjectCard";
 import Link from "next/link";
-import {
-  getSemesterBySlug,
-  getSubjectsBySemesterSlug,
-} from "@/services/academics.service";
+import { getSemesterBySlug, getSubjectsBySemesterSlug } from "@/lib/api/academics";
 
 interface Props {
   params: Promise<{
