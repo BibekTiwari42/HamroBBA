@@ -2,6 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
 from .models import Semester, Subject
 from .serializers import (
@@ -34,7 +36,11 @@ class SemesterViewSet(viewsets.ReadOnlyModelViewSet):
                 {"error": "Semester not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
-
+ ## Caching the SubjectViewSet for better performance since subjects and their details don't change frequently.
+@method_decorator(
+    cache_page(60 * 60),  # Cache for 1 hour
+    name='dispatch'
+)
 
 class SubjectViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Subject.objects.select_related("semester").all()
