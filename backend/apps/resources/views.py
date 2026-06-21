@@ -56,104 +56,107 @@ class ResourceViewSet(viewsets.ModelViewSet):
         response = super().list(request, *args, **kwargs)
         
         for item in response.data.get("results",[]):
-            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+            item["viewer_url"] = request.build_absolute_uri(
+                f"/api/v1/resources/view/{item['id']}/"
+            )
         
         return Response(response.data)
     
 ## Syllabus endpoint
 
-@action(detail=False, methods=["get"])
-def syllabus(self, request):
-    subject_slug = request.query_params.get("subject_slug")
+    @action(detail=False, methods=["get"])
+    def syllabus(self, request):
+        subject_slug = request.query_params.get("subject_slug")
     
-    if not subject_slug:
-        return Response(
-            {"error": "subject_slug parameter required"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        if not subject_slug:
+            return Response(
+                {"error": "subject_slug parameter required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )      
         
-    resource = (
-        Resource.objects.select_related("subject")
-        .filter(
-            subject__slug=subject_slug,
-            resource_type="syllabus",
-            is_published=True
+        resource = (
+            Resource.objects.select_related("subject")
+            .filter(
+                subject__slug=subject_slug,
+                resource_type="syllabus",
+                is_published=True
+            )
+            .first()
         )
-        .first()
-    )
     
-    if not resource:
-        return Response(
-            {"error": "Syllabus not found for the given subject."},
-            status=status.HTTP_404_NOT_FOUND
-        )
+        if not resource:
+            return Response(
+                {"error": "Syllabus not found for the given subject."},
+                status=status.HTTP_404_NOT_FOUND
+            )
         
-    serializer = self.get_serializer(resource)
-    data = serializer.data
-    data["viewer_url"] = f"/api/v1/resources/view/{resource.id}/"
+        data = self.get_serializer(resource).data
+        data["viewer_url"] = request.build_absolute_uri(
+            f"/api/v1/resources/view/{resource.id}/"
+        )
     
-    return Response(data)
+        return Response(data)
 
 ## notes (multiple) endpoint
 
-@action(detail=False, methods=["get"])
-def notes(self, request):
-    subject_slug = request.query_params.get("subject_slug")
+    @action(detail=False, methods=["get"])
+    def notes(self, request):
+        subject_slug = request.query_params.get("subject_slug")
     
-    if not subject_slug:
-        return Response(
-            {"error": "subject_slug parameter required"},
-            status=status.HTTP_400_BAD_REQUEST
+        if not subject_slug:
+            return Response(
+                {"error": "subject_slug parameter required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        resources = (
+            Resource.objects.select_related("subject")
+            .filter(
+                subject__slug=subject_slug,
+                resource_type=Resource.ResourceType.NOTES,
+                is_published=True
+            )
+            .order_by("display_order","unit_number")
         )
         
-    resources = (
-        Resource.objects.select_related("subject")
-        .filter(
-            subject__slug=subject_slug,
-            resource_type=Resource.ResourceType.NOTES,
-            is_published=True
-        )
-        .order_by("display_order","unit_number")
-    )
-        
-    serializer = self.get_serializer(resources, many=True)
-    data = serializer.data
+        serializer = self.get_serializer(resources, many=True)
+        data = serializer.data
     
-    for item in data:
-        item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+        for item in data:
+            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
     
-    return Response(data)
+        return Response(data)
 
 
 ## Past questions (groupby year) endpoint
 
-@action(detail=False, methods=["get"], url_path="past-questions")
-def past_questions(self, request):
-    subject_slug = request.query_params.get("subject_slug")
+    @action(detail=False, methods=["get"], url_path="past-questions")
+    def past_questions(self, request):
+        subject_slug = request.query_params.get("subject_slug")
         
-    if not subject_slug:
-        return Response(
-            {"error": "subject_slug parameter required"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        if not subject_slug:
+            return Response(
+                {"error": "subject_slug parameter required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
             
-    resources = (
-        Resource.objects.select_related("subject")
-        .filter(
-            subject__slug=subject_slug,
-            resource_type=Resource.ResourceType.PAST_QUESTIONS,
-            is_published=True
-        )
-        .order_by("-question_year")
-    )
+        resources = (
+            Resource.objects.select_related("subject")
+            .filter(
+                subject__slug=subject_slug,
+                resource_type=Resource.ResourceType.PAST_QUESTIONS,
+                is_published=True
+            )
+            .order_by("-question_year")
+     )
             
-    serializer = self.get_serializer(resources, many=True)
-    data = serializer.data
+        serializer = self.get_serializer(resources, many=True)
+        data = serializer.data
         
-    for item in data:
-        item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+        for item in data:
+            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
         
-    return Response(data)
+        return Response(data)
         
 ## secure download endpoint
         
@@ -199,11 +202,11 @@ class ResourceStreamView(APIView):
         if not resource.allow_preview:
             return Response({"detail": "Preview not available."}, status=403)
         
-        response = FileResponse(
-            resource.open("rb"),
-            content_type="application/pdf"
-        )
-        
+        file = resource.file
+        return FileResponse(file.open("rb"), 
+                            content_type="application/pdf"
+                            )
+              
         if resource.viewer_type == "inline":
              response['Content-Disposition'] = (
                  f'inline; filename="{resource.title}.pdf"'
