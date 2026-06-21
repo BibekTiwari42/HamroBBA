@@ -27,6 +27,21 @@ class Resource(models.Model):
         choices=ResourceType.choices
     )
     
+    unit_number = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Used for ordering resources within a subject.")
+    
+    question_year = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Used for past questions to indicate the year. ")
+    
+    display_order = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Used for custom ordering of resources. ")
+    
     viewer_type = models.CharField(
         max_length=50,
         choices=[
