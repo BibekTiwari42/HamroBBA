@@ -188,7 +188,7 @@ class SecureResourceDownloadView(APIView):
 ## secure streaming endpoint
 
 class ResourceStreamView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request, pk):
         try:    
