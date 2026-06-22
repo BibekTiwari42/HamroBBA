@@ -44,6 +44,7 @@ LOCAL_APPS = [
     "apps.resources",
     "apps.common",
     "apps.search",
+    "apps.question_bank",
 ]
 
 INSTALLED_APPS = (
