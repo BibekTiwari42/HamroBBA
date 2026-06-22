@@ -42,6 +42,11 @@ urlpatterns = [
     path("api/v1/academics/", include("apps.academics.urls")),
     
     path("api/v1/search/", include("apps.search.urls")),
+    
+    path(
+        "api/v1/question-bank/",
+        include("apps.question_bank.urls"),
+    )
 ]
 
 # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
