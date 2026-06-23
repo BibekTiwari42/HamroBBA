@@ -23,9 +23,10 @@ export default function SubjectTabs({
   ];
 
   return (
-    <div className="flex gap-6 border-b mt-6">
+    <div className="flex gap-6 border-b border-gray-200 mt-6">
       {tabs.map((tab) => {
-        const active = pathname === tab.href;
+        const active = 
+        pathname === tab.href || pathname === `${tab.href}/`;
 
         return (
           <Link

@@ -1,30 +1,33 @@
-import { getSubjectBySlug } from "@/lib/api/academics";
-import { notFound } from "next/navigation";
+import { getNotesBySubjectSlug } from "@/lib/api/notes";
 
 export default async function Page({ params }: any) {
   const { subjectSlug } = await params;
 
-  const subject = await getSubjectBySlug(subjectSlug);
-
-  if (!subject) notFound();
-
-  const units = subject.syllabus?.units || [];
+  const notes = await getNotesBySubjectSlug(subjectSlug);
 
   return (
-    <div className="grid md:grid-cols-2 gap-4">
-      {units.map((u: any) => (
-        <div
-          key={u.unit}
-          className="border rounded-xl p-5 hover:shadow-md transition bg-white"
+    <div className="grid gap-4 md:grid-cols-2">
+      {notes.map((note: any) => (
+        <a
+          key={note.id}
+          href={`./notes/${note.unit_number}`}
+          className="
+            rounded-xl border bg-white p-5
+            hover:shadow-md transition
+          "
         >
-          <h2 className="font-bold text-lg">
-            Unit {u.unit}: {u.title}
+          <div className="text-sm text-gray-500">
+            Unit {note.unit_number}
+          </div>
+
+          <h2 className="mt-2 font-semibold text-lg">
+            {note.title}
           </h2>
 
-          <p className="text-sm text-gray-500 mt-2">
-            {u.topics?.length || 0} topics
+          <p className="mt-2 text-sm text-gray-500">
+            Click to open chapter notes
           </p>
-        </div>
+        </a>
       ))}
     </div>
   );
