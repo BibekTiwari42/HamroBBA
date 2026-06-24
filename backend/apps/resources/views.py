@@ -123,7 +123,9 @@ class ResourceViewSet(viewsets.ModelViewSet):
         data = serializer.data
     
         for item in data:
-            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+            item["viewer_url"] = request.build_absolute_uri(
+                f"/api/v1/resources/view/{item['id']}/"
+            )
     
         return Response(data)
 
@@ -154,7 +156,9 @@ class ResourceViewSet(viewsets.ModelViewSet):
         data = serializer.data
         
         for item in data:
-            item["viewer_url"] = f"/api/v1/resources/view/{item['id']}/"
+            item["viewer_url"] = request.build_absolute_uri(
+                f"/api/v1/resources/view/{item['id']}/"
+            )
         
         return Response(data)
         
