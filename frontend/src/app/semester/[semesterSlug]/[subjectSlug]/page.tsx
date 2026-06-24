@@ -1,34 +1,64 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { getSubjectBySlug } from "@/lib/api/academics";
 import { getNotesBySubjectSlug } from "@/lib/api/notes";
 
 export default async function Page({ params }: any) {
-  const { subjectSlug } = await params;
+  const { semesterSlug, subjectSlug } = await params;
 
-  const notes = await getNotesBySubjectSlug(subjectSlug);
+  const [subject, notes] = await Promise.all([
+    getSubjectBySlug(subjectSlug),
+    getNotesBySubjectSlug(subjectSlug),
+  ]);
+
+  if (!subject) {
+    notFound();
+  }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      {notes.map((note: any) => (
-        <a
-          key={note.id}
-          href={`./notes/${note.unit_number}`}
-          className="
-            rounded-xl border bg-white p-5
-            hover:shadow-md transition
-          "
-        >
-          <div className="text-sm text-gray-500">
-            Unit {note.unit_number}
-          </div>
+    <div>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900">Chapter Wise Notes</h2>
+        <p className="mt-2 text-gray-600">
+          Select a chapter to start studying.
+        </p>
+      </div>
 
-          <h2 className="mt-2 font-semibold text-lg">
-            {note.title}
-          </h2>
-
-          <p className="mt-2 text-sm text-gray-500">
-            Click to open chapter notes
+      {notes.length === 0 ? (
+        <div className="rounded-2xl border bg-white p-12 text-center">
+          <h3 className="text-lg font-semibold">No Notes Available</h3>
+          <p className="mt-2 text-gray-500">
+            Notes have not been uploaded for this subject yet.
           </p>
-        </a>
-      ))}
+        </div>
+      ) : (
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          {notes.map((note: any) => (
+            <Link
+              key={note.id}
+              href={`/semester/${semesterSlug}/${subjectSlug}/notes/${note.unit_number}`}
+              className="group rounded-2xl border bg-white p-6 transition-all duration-200 hover:-translate-y-1 hover:border-blue-500 hover:shadow-lg"
+            >
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-700">
+                {note.unit_number}
+              </div>
+
+              <h3 className="text-lg font-semibold text-gray-900">
+                Unit {note.unit_number}
+              </h3>
+
+              <p className="mt-2 line-clamp-2 text-sm text-gray-600">
+                {note.title}
+              </p>
+
+              <div className="mt-5 text-sm font-medium text-blue-600">
+                Open Chapter →
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
