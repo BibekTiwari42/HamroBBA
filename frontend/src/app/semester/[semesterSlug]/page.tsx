@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import SubjectCard from "@/components/resource/SubjectCard";
+// import SubjectCard from "@/components/resource/SubjectCard";
+import SemesterSubjectCard from "@/components/academics/SemesterSubjectCard";
 import Link from "next/link";
 import { getSemesterBySlug, getSubjectsBySemesterSlug } from "@/lib/api/academics";
 
@@ -53,28 +54,28 @@ export default async function SemesterPage({ params }: Props) {
 
       <main className="min-h-screen bg-gray-50">
         {/* Header Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-12">
-          <div className="mx-auto max-w-7xl px-6">
-            <Link
-              href="/"
-              className="mb-4 inline-flex items-center text-blue-100 hover:text-white"
-            >
-              ← Back to Semesters
-            </Link>
-            <h1 className="text-4xl font-bold">{semester.name}</h1>
-            {semester.description && (
-              <p className="mt-3 text-lg text-blue-100">
-                {semester.description}
-              </p>
-            )}
+        <section className="border-b bg-white">
+          <div className="mx-auto max-w-7xl px-6 py-12">
+            <Link href="/" className="text-sm text-blue-400 hover:text-blue-600"
+              > ← Back to Semesters </Link>
+
+            <h1 className="mt-4 text-4xl font-bold text-slate-900">
+              {semester.name}
+            </h1>
+
+            <p className="mt-4 max-w-3xl text-slate-600">
+              {semester.description ||
+                "Explore subjects, syllabus, past questions, and learning materials for this semester."}
+            </p>
           </div>
+
         </section>
 
         {/* Subjects Grid */}
         <section className="mx-auto max-w-7xl px-6 py-12">
           <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Subjects ({subjects.length})
+            <h2 className="text-3xl font-bold text-gray-900">
+              Subjects
             </h2>
             <p className="mt-2 text-gray-600">
               Select a subject to view syllabus, past questions, and learning
@@ -83,15 +84,15 @@ export default async function SemesterPage({ params }: Props) {
           </div>
 
           {subjects.length === 0 ? (
-            <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-              <p className="text-gray-500">
+            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
+              <p className="text-slate-500">
                 No subjects found for this semester.
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {subjects.map((subject) => (
-                <SubjectCard
+                <SemesterSubjectCard
                   key={subject.id}
                   subject={subject}
                   semesterSlug={semesterSlug}
