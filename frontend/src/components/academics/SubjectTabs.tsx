@@ -14,34 +14,50 @@ export default function SubjectTabs({
 }: Props) {
   const pathname = usePathname();
 
-  const base = `/semester/${semesterSlug}/${subjectSlug}`;
+  const base =
+    `/semester/${semesterSlug}/${subjectSlug}`;
 
   const tabs = [
-    { name: "Chapters", href: base },
-    { name: "Syllabus", href: `${base}/syllabus` },
-    { name: "Past Questions", href: `${base}/past-questions` },
+    {
+      name: "Chapters",
+      href: base,
+    },
+    {
+      name: "Past Questions",
+      href: `${base}/past-questions`,
+    },
+    {
+      name: "Syllabus",
+      href: `${base}/syllabus`,
+    },
   ];
 
   return (
-    <div className="flex gap-6 border-b border-gray-200 mt-6">
-      {tabs.map((tab) => {
-        const active = 
-        pathname === tab.href || pathname === `${tab.href}/`;
+    <div className="mt-8 flex justify-center">
+      <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+        {tabs.map((tab) => {
+          const active =
+            pathname === tab.href;
 
-        return (
-          <Link
-            key={tab.name}
-            href={tab.href}
-            className={`pb-3 text-sm font-medium transition ${
-              active
-                ? "border-b-2 border-blue-600 text-blue-600"
-                : "text-gray-500 hover:text-gray-800"
-            }`}
-          >
-            {tab.name}
-          </Link>
-        );
-      })}
+          return (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              className={`
+                rounded-xl px-5 py-2 text-sm font-medium
+                transition-all duration-200
+                ${
+                  active
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "text-slate-600 hover:-translate-y-0.5 hover:text-blue-600"
+                }
+              `}
+            >
+              {tab.name}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
