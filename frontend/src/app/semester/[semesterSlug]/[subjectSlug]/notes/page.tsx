@@ -1,5 +1,5 @@
 import { getNotesBySubjectSlug } from "@/lib/api/notes";
-import NoteChapterCard from "@/components/notes/NoteChapterCard";
+import NoteChapterCard from "@/components/notes/ChapterCard";
 
 interface Props {
   params: Promise<{
