@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #ffffff;
@@ -6,6 +7,7 @@
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
+  --dark-primary: #0B132B ;
 
   --secondary: #eff6ff;
   --muted: #f8fafc;
@@ -24,6 +26,7 @@ html {
 }
 
 body {
+  @apply bg-white text-slate-900;
   background: var(--background);
   color: var(--foreground);
   font-family:
@@ -31,6 +34,11 @@ body {
     system-ui,
     -apple-system,
     sans-serif;
+}
+.dark body {
+  @apply bg-slate-900 text-slate-100;
+  background: var(--dark-primary);
+  color: #f8fafc;
 }
 
 h1,
