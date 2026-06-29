@@ -53,3 +53,44 @@ class Subject(models.Model):
         
     def __str__(self):
         return self.name
+    
+class SyllabusUnit(models.Model):
+    subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        related_name="units"
+    )
+
+    unit_number = models.PositiveSmallIntegerField()
+
+    title = models.CharField(max_length=255)
+
+    description = models.TextField(
+        blank=True,
+        help_text="Short summary shown on chapter cards."
+    )
+
+    lecture_hours = models.PositiveSmallIntegerField(
+        default=0,
+        help_text="Official lecture hours from TU syllabus."
+    )
+
+    display_order = models.PositiveSmallIntegerField(
+        default=1
+    )
+
+    class Meta:
+        ordering = ["display_order", "unit_number"]
+
+        unique_together = (
+            "subject",
+            "unit_number",
+        )
+
+        indexes = [
+            models.Index(fields=["subject"]),
+            models.Index(fields=["display_order"]),
+        ]
+
+    def __str__(self):
+        return f"{self.subject.name} - Unit {self.unit_number}"
