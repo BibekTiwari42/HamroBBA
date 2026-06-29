@@ -40,25 +40,24 @@ export default function SubjectTabs({
   ];
 
   return (
-    <div className="mt-8 flex justify-center">
-      <div className="inline-flex rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+    <div className="mt-6 flex justify-center">
+      <div className="inline-flex rounded-xl border border-slate-200/80 bg-slate-50 p-1 dark:border-slate-800/80 dark:bg-slate-950">
         {tabs.map((tab) => (
           <Link
             key={tab.name}
             href={tab.href}
             className={`
-              rounded-xl px-5 py-2 text-sm font-medium
-                transition-all duration-200
-                ${
-                  tab.active
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-600 hover:-translate-y-0.5 hover:text-blue-600"
-                }
-              `}
-            >
-              {tab.name}
-            </Link>
-          
+              rounded-lg px-4 py-1.5 text-xs font-bold uppercase tracking-wider
+              transition-all duration-200
+              ${
+                tab.active
+                  ? "bg-white text-blue-600 shadow-sm border border-slate-200/60 dark:bg-blue-500 dark:text-slate-100 dark:border-slate-800/50"
+                  : "text-slate-800 hover:text-blue-700 dark:text-blue-400 dark:hover:text-slate-200"
+              }
+            `}
+          >
+            {tab.name}
+          </Link>
         ))}
       </div>
     </div>
