@@ -52,6 +52,7 @@ export default async function HomePage() {
                   key={semester.id}
                   slug={semester.slug}
                   title={semester.name}
+                  semester={semester}
                 />
               ))}
             </div>
