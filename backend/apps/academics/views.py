@@ -5,10 +5,11 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 
-from .models import Semester, Subject
+from .models import Semester, Subject, SyllabusUnit
 from .serializers import (
     SemesterSerializer,
     SubjectSerializer,
+    SyllabusUnitSerializer,
 )
 
 
@@ -88,3 +89,35 @@ class SubjectViewSet(viewsets.ReadOnlyModelViewSet):
                 {"error": "Semester not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+            
+class SyllabusUnitViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = (
+        SyllabusUnit.objects
+        .select_related("subject")
+        .all()
+        .order_by("display_order", "unit_number")
+    )
+
+    serializer_class = SyllabusUnitSerializer
+    permission_classes = [AllowAny]
+
+    @action(detail=False, methods=["get"])
+    def by_subject_slug(self, request):
+        subject_slug = request.query_params.get("subject_slug")
+
+        if not subject_slug:
+            return Response(
+                {"error": "subject_slug parameter required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        units = (
+            SyllabusUnit.objects
+            .select_related("subject")
+            .filter(subject__slug=subject_slug)
+            .order_by("display_order", "unit_number")
+        )
+
+        serializer = self.get_serializer(units, many=True)
+
+        return Response(serializer.data)
