@@ -1,7 +1,11 @@
 export interface SyllabusUnit {
-  unit: number;
-  title: string;
-  topics: string[];
+  id: number;
+  subject: number;
+  unit_number: number;
+  title:string;
+  description: string;
+  lecture_hours: number;
+  display_order: number;
 }
 
 export interface Syllabus {

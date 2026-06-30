@@ -1,5 +1,6 @@
 import api from "@/services/api";
 import { Semester, Subject } from "@/types/academic";
+import { SyllabusUnit } from "@/types/academic";
 import { endpoints } from "@/lib/endpoints";
 import { ApiResponse } from "@/lib/api/types";
 export const getSemesters = async (): Promise<Semester[]> => {
@@ -97,3 +98,18 @@ export const getSubjectDetail = async (
     return null;
   }
 };
+
+export async function getSubjectUnits(
+  subjectSlug: string
+): Promise<SyllabusUnit[]> {
+  try {
+    const res = await api.get(
+      `/academics/units/by_subject_slug/?subject_slug=${subjectSlug}`
+    );
+
+    return res.data || [];
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
