@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { getNotesBySubjectSlug } from "@/lib/api/notes";
+import { getSubjectUnits } from "@/lib/api/academics";
 
 import ChapterSidebar from "@/components/notes/ChapterSidebar";
 import ChapterNavigation from "@/components/notes/ChapterNavigation";
@@ -16,28 +17,36 @@ interface Props {
 
 export default async function NoteViewerPage({ params }: Props) {
   const { semesterSlug, subjectSlug, unit } = await params;
-
-  const notes = await getNotesBySubjectSlug(subjectSlug);
   const currentUnit = Number(unit);
 
-  const currentNote = notes.find((n: any) => n.unit_number === currentUnit);
+  
+  const notes = await getNotesBySubjectSlug(subjectSlug);
+  const units = await getSubjectUnits(subjectSlug); 
 
-  if (!currentNote) {
+  // Find the unit details from the full syllabus
+  const currentSyllabusUnit = units.find((u: any) => u.unit_number === currentUnit);
+  
+  if (!currentSyllabusUnit) {
+    // If the unit number doesn't even exist in the syllabus, then 404
     notFound();
   }
 
-  const index = notes.findIndex((n: any) => n.unit_number === currentUnit);
+  // Check if a PDF note actually exists for this unit
+  const currentNote = notes.find((n: any) => n.unit_number === currentUnit);
 
-  const previous = index > 0 ? notes[index - 1].unit_number : null;
-  const next = index < notes.length - 1 ? notes[index + 1].unit_number : null;
+  
+  const index = units.findIndex((u: any) => u.unit_number === currentUnit);
+  const previous = index > 0 ? units[index - 1].unit_number : null;
+  const next = index < units.length - 1 ? units[index + 1].unit_number : null;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[280px_1fr] transition-colors duration-200">
       
-      {/*  Chapter Sidebar  */}
+      {/* Chapter Sidebar */}
       <div className="lg:sticky lg:top-24 h-fit">
         <ChapterSidebar
-          notes={notes}
+          units={units}
+          notes={notes} 
           activeUnit={currentUnit}
           semesterSlug={semesterSlug}
           subjectSlug={subjectSlug}
@@ -48,22 +57,19 @@ export default async function NoteViewerPage({ params }: Props) {
       <div>
         <div className="rounded-xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800/80 dark:bg-slate-900">
           
-         
           <div className="border-b border-dashed text-center border-slate-200 pb-4 dark:border-slate-800">
             <h1 className="mt-3 text-xl font-bold tracking-tight text-slate-900 dark:text-white mx-auto">
-              {currentNote.title}
+              {currentSyllabusUnit.title} 
             </h1>
           </div>
 
-
           <div className="mt-6">
-            {currentNote.viewer_url ? (
+            {currentNote?.viewer_url ? (
               <CustomPdfViewer
                 url={currentNote.viewer_url}
-                title={`${currentNote.title}`}
+                title={`${currentSyllabusUnit.title}`}
               />
             ) : (
-
               <div className="rounded-xl border border-slate-200/80 bg-slate-50 p-8 text-center dark:border-slate-800/80 dark:bg-slate-950">
                 <div className="mx-auto max-w-md">
                   <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">

@@ -30,6 +30,7 @@ export default async function NotesPage({ params }: Props) {
             <NoteChapterCard
               key={note.id}
               note={note}
+              unit={note.unit}
               semesterSlug={semesterSlug}
               subjectSlug={subjectSlug}
             />
