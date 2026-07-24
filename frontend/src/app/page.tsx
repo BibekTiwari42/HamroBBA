@@ -120,8 +120,6 @@ export default async function HomePage() {
               {semesters.map((semester: any) => (
                 <SemesterCard
                   key={semester.id}
-                  slug={semester.slug}
-                  title={semester.name}
                   semester={semester}
                 />
               ))}
