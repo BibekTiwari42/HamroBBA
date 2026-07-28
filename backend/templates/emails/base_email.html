@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}HamroBBA{% endblock %}</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #0f172a;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="background-color: #f1f5f9; padding: 24px 0;"
+    >
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            width="560"
+            cellpadding="0"
+            cellspacing="0"
+            style="
+              background-color: #ffffff;
+              border-radius: 12px;
+              max-width: 560px;
+              width: 100%;
+              overflow: hidden;
+              box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                style="
+                  background-color: #1d4ed8;
+                  padding: 24px 32px;
+                  text-align: center;
+                "
+              >
+                <span
+                  style="
+                    color: #ffffff;
+                    font-size: 22px;
+                    font-weight: 700;
+                    letter-spacing: 0.5px;
+                  "
+                  >HamroBBA</span
+                >
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding: 32px;">
+                {% block content %}{% endblock %}
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                style="
+                  padding: 20px 32px;
+                  background-color: #f8fafc;
+                  border-top: 1px solid #e2e8f0;
+                  text-align: center;
+                  font-size: 13px;
+                  color: #64748b;
+                  line-height: 1.5;
+                "
+              >
+                {% block footer %}
+                  You're receiving this email because an account was created or an action was requested on
+                  <a href="{{ frontend_url }}" style="color: #1d4ed8; text-decoration: none;">HamroBBA</a>.
+                  <br />
+                  If this wasn't you, you can safely ignore this message.
+                {% endblock %}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
