@@ -16,10 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -32,17 +28,17 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
+
+    # Authentication endpoints (otp request/verify, google, logout, refresh,
+    # me, profile). There is no password-based auth flow anymore.
     path("api/v1/auth/", include("apps.accounts.urls")),
-    path("api/v1/auth/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("api/v1/auth/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    
+
     path("api/v1/", include("apps.resources.urls")),
-    
+
     path("api/v1/academics/", include("apps.academics.urls")),
-    
+
     path("api/v1/search/", include("apps.search.urls")),
-    
+
     path(
         "api/v1/question-bank/",
         include("apps.question_bank.urls"),
