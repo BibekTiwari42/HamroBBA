@@ -2,15 +2,43 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { useAuth } from "@/context/AuthContext";
 
 interface Semester {
   name: string;
   slug: string;
 }
 
-export default function MobileMenu({ semesters }: { semesters: Semester[] }) {
+export default function MobileMenu({
+  semesters,
+  isAuthenticated = false,
+}: {
+  semesters: Semester[];
+  isAuthenticated?: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSemestersOpen, setIsSemestersOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleSignOut = async () => {
+    setSigningOut(true);
+    try {
+      await logout();
+      toast.success("Signed out.");
+      setIsOpen(false);
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error("Could not sign out.");
+    } finally {
+      setSigningOut(false);
+    }
+  };
 
   return (
     <div className="md:hidden">
@@ -93,13 +121,43 @@ export default function MobileMenu({ semesters }: { semesters: Semester[] }) {
             Contribute
           </Link>
 
-          <Link
-            href="/login"
-            onClick={() => setIsOpen(false)}
-            className="mt-2 rounded-xl bg-blue-600 py-3 text-center text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 dark:shadow-none"
-          >
-            Login
-          </Link>
+          <div className="mt-2 flex flex-col gap-2 border-t border-gray-100 pt-3 dark:border-slate-800">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-gray-700 transition hover:bg-blue-50/50 hover:text-blue-600 dark:text-slate-200 dark:hover:bg-blue-900/30 dark:hover:text-blue-400"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="rounded-xl px-4 py-3 text-left text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-60 dark:text-red-400 dark:hover:bg-red-950/30"
+                >
+                  {signingOut ? "Signing out…" : "Sign out"}
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-gray-700 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-xl bg-blue-600 py-3 text-center text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:bg-blue-700 dark:shadow-none"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
         </nav>
       </div>
     </div>
