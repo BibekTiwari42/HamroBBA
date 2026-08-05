@@ -4,9 +4,10 @@ import QuestionSection from "./QuestionSection";
 
 interface Props {
   questions: any[];
+  fullMarks?: number;
 }
 
-export default function PaperQuestions({ questions }: Props) {
+export default function PaperQuestions({ questions, fullMarks = 100 }: Props) {
   const groupA = questions.filter((q) => q.section === "A");
   const groupB = questions.filter((q) => q.section === "B");
   const groupC = questions.filter((q) => q.section === "C");
@@ -14,10 +15,10 @@ export default function PaperQuestions({ questions }: Props) {
 
   return (
     <div className="space-y-2">
-      <QuestionSection title="Group A" questions={groupA} />
-      <QuestionSection title="Group B" questions={groupB} />
-      <QuestionSection title="Group C" questions={groupC} />
-      <QuestionSection title="Group D" questions={groupD} />
+      <QuestionSection title="Group A" questions={groupA} fullMarks={fullMarks} />
+      <QuestionSection title="Group B" questions={groupB} fullMarks={fullMarks} />
+      <QuestionSection title="Group C" questions={groupC} fullMarks={fullMarks} />
+      <QuestionSection title="Group D" questions={groupD} fullMarks={fullMarks} />
     </div>
   );
 }

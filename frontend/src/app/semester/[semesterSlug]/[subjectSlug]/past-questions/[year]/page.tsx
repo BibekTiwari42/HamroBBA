@@ -79,7 +79,7 @@ export default async function PastPaperPage({ params }: Props) {
             duration={paper.duration} subjectCode={""}          />
 
           <div className="mt-6 border-t border-dashed border-slate-200 pt-6 dark:border-slate-800">
-            <SearchablePaper questions={paper.questions} />
+            <SearchablePaper questions={paper.questions} fullMarks={paper.full_marks} />
           </div>
 
           <div className="mt-8 border-t border-dashed border-slate-100 pt-4 dark:border-slate-800/60 print:hidden">
