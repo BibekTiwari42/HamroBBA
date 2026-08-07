@@ -13,14 +13,27 @@ export default function ChapterNavigation({
   semesterSlug,
   subjectSlug,
 }: Props) {
+  
+  const buttonStyles = `
+    group inline-flex items-center gap-2 rounded-xl border border-slate-200/80 
+    bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm 
+    transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-blue-600 
+    active:scale-[0.98] 
+    dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300 
+    dark:hover:border-slate-700 dark:hover:bg-slate-800 dark:hover:text-blue-400
+  `;
+
   return (
-    <div className="mt-6 flex justify-between">
+    <div className="flex items-center justify-between gap-4">
       {previous ? (
         <Link
           href={`/semester/${semesterSlug}/${subjectSlug}/notes/${previous}`}
-          className="rounded-xl border px-5 py-2 hover:bg-slate-50"
+          className={buttonStyles}
         >
-          ← Previous Chapter
+          <span className="transition-transform duration-200 group-hover:-translate-x-1">
+            ←
+          </span>
+          <span>Previous Chapter</span>
         </Link>
       ) : (
         <div />
@@ -29,9 +42,12 @@ export default function ChapterNavigation({
       {next ? (
         <Link
           href={`/semester/${semesterSlug}/${subjectSlug}/notes/${next}`}
-          className="rounded-xl border px-5 py-2 hover:bg-slate-50"
+          className={`${buttonStyles} ml-auto`}
         >
-          Next Chapter →
+          <span>Next Chapter</span>
+          <span className="transition-transform duration-200 group-hover:translate-x-1">
+            →
+          </span>
         </Link>
       ) : null}
     </div>

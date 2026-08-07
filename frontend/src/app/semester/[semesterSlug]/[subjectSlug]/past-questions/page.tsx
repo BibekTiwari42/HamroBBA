@@ -1,5 +1,4 @@
-import Link from "next/link";
-
+import { redirect } from "next/navigation";
 import { getPastPapers } from "@/lib/api/past-questions";
 
 interface Props {
@@ -9,53 +8,39 @@ interface Props {
   }>;
 }
 
-export default async function PastQuestionsPage({
-  params,
-}: Props) {
-  const { semesterSlug, subjectSlug } =
-    await params;
+export default async function PastQuestionsPage({ params }: Props) {
+  const { semesterSlug, subjectSlug } = await params;
+  const papers = await getPastPapers(subjectSlug);
 
-  const papers = await getPastPapers(
-    subjectSlug
-  );
+  if (papers && papers.length > 0) {
+    const sortedPapers = [...papers].sort((a, b) => b.year - a.year);
+    const latestYear = sortedPapers[0].year;
+    
+    redirect(`/semester/${semesterSlug}/${subjectSlug}/past-questions/${latestYear}`);
+  }
+
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">
+    <div className="py-2 transition-colors duration-200">
+      <div className="mb-6 border-b border-dashed border-slate-200 pb-4 dark:border-slate-800">
+        <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
           Past Questions
         </h1>
-
-        <p className="mt-2 text-gray-600">
-          Select an examination year.
+        <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+          University examination paper archives.
         </p>
       </div>
 
-      {papers.length === 0 ? (
-        <div className="rounded-xl border bg-white p-8">
-          No past questions available.
+      <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-800/80 dark:bg-slate-900">
+        <div className="mx-auto max-w-md">
+          <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">
+            No Past Questions Available
+          </h3>
+          <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+            Examination papers for this subject have not been archived yet.
+          </p>
         </div>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-3">
-          {papers.map((paper) => (
-            <Link
-              key={paper.id}
-              href={`/semester/${semesterSlug}/${subjectSlug}/past-questions/${paper.year}`}
-              className="rounded-xl border bg-white p-6 shadow-sm hover:shadow-md transition"
-            >
-              <div className="text-2xl font-bold">
-                {paper.year}
-              </div>
-
-              <div className="mt-2 text-sm text-gray-500">
-                Full Marks:
-                {" "}
-                {paper.full_marks}
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   );
 }
