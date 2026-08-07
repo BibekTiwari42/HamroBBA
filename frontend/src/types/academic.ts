@@ -30,6 +30,7 @@ export interface Subject {
   semester: number | Semester;
   syllabus?: Syllabus | null;
   past_questions?: PastQuestions | null;
+  chapter_count?: number;
 }
 
 export interface Semester {

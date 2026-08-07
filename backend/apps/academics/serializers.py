@@ -3,6 +3,8 @@ from .models import Semester, Subject, SyllabusUnit
 
 
 class SubjectSerializer(serializers.ModelSerializer):
+    chapter_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Subject
         fields = [
@@ -13,8 +15,13 @@ class SubjectSerializer(serializers.ModelSerializer):
             "description",
             "syllabus",
             "past_questions",
-            "semester"
+            "semester",
+            "chapter_count"
         ]
+
+    def get_chapter_count(self, obj):
+        """Return the count of syllabus units (chapters) for this subject."""
+        return obj.units.count()
 
 class SyllabusUnitSerializer(serializers.ModelSerializer):
     class Meta:
