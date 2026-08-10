@@ -9,7 +9,9 @@ export const endpoints = {
     download: (id: number) => `/resources/download/${id}/`,
   },
   auth: {
-    login: "/auth/login/",
+    otpRequest: "/auth/otp/request/",
+    otpVerify: "/auth/otp/verify/",
+    google: "/auth/google/",
     me: "/auth/me/",
     refresh: "/auth/refresh/",
   },

@@ -2,10 +2,13 @@
 import Link from "next/link";
 import MobileMenu from "./MobileMenu";
 import ThemeToggle from "./ThemeToggle";
+import UserMenu from "./UserMenu";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,7 +32,7 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="sticky top-4 z-50 mx-auto w-full max-w-[1400px] px-4 sm:px-6">
+    <div className="sticky top-4 z-50 mx-auto w-full max-w-[1400px] px-4 sm:px-6 mb-4 sm:mb-6">
       <header 
         className={`flex h-16 w-full items-center justify-between rounded-2xl border transition-all duration-300 px-5 sm:px-6 ${
           isScrolled 
@@ -40,7 +43,7 @@ export default function Navbar() {
         
         {/* LEFT: Logo  */}
         <div className="flex items-center gap-5 lg:gap-6">
-          <Link href="/" className="text-xl font-extrabold tracking-tight text-blue-600 transition hover:opacity-90 shrink-0">
+          <Link href="/" className="text-xl font-logo font-extrabold tracking-tight text-blue-600 transition hover:opacity-90 shrink-0">
             Hamro<span 
               className={`transition-colors duration-300 ${
                 isScrolled ? 'text-gray-900 dark:text-slate-100'
@@ -88,21 +91,30 @@ export default function Navbar() {
         {/* RIGHT: Auth & Actions */}
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/login" className="flex items-center gap-1 px-2 text-sm font-semibold text-gray-600 transition-all duration-200 hover:text-blue-600 dark:text-slate-200 dark:hover:text-blue-400">
-              Login <span aria-hidden="true">&rarr;</span>
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-xl bg-blue-600/95 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-200/50 transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-300/40 dark:shadow-none backdrop-blur-sm"
-            >
-              Sign Up
-            </Link>
+            {/* While hydrating, show nothing to avoid login/logout flicker. */}
+            {isLoading ? (
+              <div className="h-8 w-20" aria-hidden="true" />
+            ) : isAuthenticated && user ? (
+              <UserMenu />
+            ) : (
+              <>
+                <Link href="/login" className="flex items-center gap-1 px-2 text-sm font-semibold text-gray-600 transition-all duration-200 hover:text-blue-600 dark:text-slate-200 dark:hover:text-blue-400">
+                  Login <span aria-hidden="true">&rarr;</span>
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-xl bg-blue-600/95 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-blue-200/50 transition-all duration-200 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-300/40 dark:shadow-none backdrop-blur-sm"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
             <ThemeToggle />
           </div>
 
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
-            <MobileMenu semesters={semesters} />
+            <MobileMenu semesters={semesters} isAuthenticated={isAuthenticated && !isLoading} />
           </div>
         </div>
 
