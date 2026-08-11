@@ -12,6 +12,6 @@ export async function getNotesBySubjectSlug(
         return res.data || [];
     } catch (error) {
         console.error("Error fetching notes:", error);
-        throw error;
+        return [];
     }
 }

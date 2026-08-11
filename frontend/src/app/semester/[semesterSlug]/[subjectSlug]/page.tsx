@@ -1,6 +1,7 @@
 import { getSubjectUnits } from "@/lib/api/academics";
 import { getNotesBySubjectSlug } from "@/lib/api/notes";
 import ChapterCard from "@/components/notes/ChapterCard";
+import NotFoundState from "@/components/common/NotFoundState";
 
 interface Props {
   params: Promise<{
@@ -33,15 +34,11 @@ export default async function Page({
       </div>
 
       {units.length === 0 ? (
-        <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-800/80 dark:bg-slate-900">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">
-            No Chapters Available
-          </h3>
-
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-            This subject doesn't have any syllabus units yet.
-          </p>
-        </div>
+        <NotFoundState
+          compact
+          title="No Chapters Yet"
+          description="This subject doesn't have any syllabus units yet. Check back soon."
+        />
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {units.map((unit) => {

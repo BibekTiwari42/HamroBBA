@@ -1,6 +1,7 @@
 import { getSyllabusBySubjectSlug } from "@/lib/api/resources";
 import { Subject } from "@/types/academic";
 import CustomPdfViewer from "@/components/resource/CustomPdfViewer";
+import NotFoundState from "@/components/common/NotFoundState";
 
 interface Props {
   params: Promise<{
@@ -50,16 +51,11 @@ export default async function SyllabusPage({ params }: Props) {
             />
           </div>
         ) : (
-          <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-800/80 dark:bg-slate-900">
-            <div className="mx-auto max-w-md">
-              <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">
-                Syllabus Not Available
-              </h3>
-              <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-                The syllabus PDF has not been uploaded yet.
-              </p>
-            </div>
-          </div>
+          <NotFoundState
+            compact
+            title="Syllabus Not Available"
+            description="The syllabus PDF for this subject hasn't been uploaded yet. Check back soon."
+          />
         )}
       </div>
     </div>

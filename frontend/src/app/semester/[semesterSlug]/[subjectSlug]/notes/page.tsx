@@ -1,5 +1,6 @@
 import { getNotesBySubjectSlug } from "@/lib/api/notes";
 import NoteChapterCard from "@/components/notes/ChapterCard";
+import NotFoundState from "@/components/common/NotFoundState";
 
 interface Props {
   params: Promise<{
@@ -21,9 +22,11 @@ export default async function NotesPage({ params }: Props) {
       </div>
 
       {notes.length === 0 ? (
-        <div className="rounded-xl border bg-white p-8 text-center">
-          No notes available.
-        </div>
+        <NotFoundState
+          compact
+          title="No Notes Yet"
+          description="Notes for this subject haven't been uploaded yet. Check back soon."
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {notes.map((note: any) => (

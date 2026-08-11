@@ -6,6 +6,7 @@ import { getSubjectUnits } from "@/lib/api/academics";
 import ChapterSidebar from "@/components/notes/ChapterSidebar";
 import ChapterNavigation from "@/components/notes/ChapterNavigation";
 import CustomPdfViewer from "@/components/resource/CustomPdfViewer";
+import NotFoundState from "@/components/common/NotFoundState";
 
 interface Props {
   params: Promise<{
@@ -70,16 +71,12 @@ export default async function NoteViewerPage({ params }: Props) {
                 title={`${currentSyllabusUnit.title}`}
               />
             ) : (
-              <div className="rounded-xl border border-slate-200/80 bg-slate-50 p-8 text-center dark:border-slate-800/80 dark:bg-slate-950">
-                <div className="mx-auto max-w-md">
-                  <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">
-                    PDF Not Available
-                  </h3>
-                  <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-                    The chapter PDF has not been uploaded yet.
-                  </p>
-                </div>
-              </div>
+              <NotFoundState
+                compact
+                eyebrow="Notes"
+                title="PDF Not Available"
+                description="The chapter PDF has not been uploaded yet."
+              />
             )}
           </div>
 

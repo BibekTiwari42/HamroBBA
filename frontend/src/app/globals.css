@@ -20,7 +20,7 @@
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
-  --dark-primary: #0B132B ;
+  --dark-primary: #020618;
 
   --secondary: #eff6ff;
   --muted: #f8fafc;
@@ -47,7 +47,7 @@ body {
 }
 
 .dark body {
-  @apply bg-slate-900 text-slate-100;
+  @apply bg-slate-950 text-slate-100;
   background: var(--dark-primary);
   color: #f8fafc;
 }

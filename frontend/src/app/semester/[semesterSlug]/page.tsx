@@ -2,6 +2,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 // import SubjectCard from "@/components/resource/SubjectCard";
 import SemesterSubjectCard from "@/components/academics/SemesterSubjectCard";
+import NotFoundState from "@/components/common/NotFoundState";
 import Link from "next/link";
 import { getSemesterBySlug, getSubjectsBySemesterSlug } from "@/lib/api/academics";
 
@@ -27,22 +28,22 @@ export default async function SemesterPage({ params }: Props) {
     return (
       <>
         <Navbar />
-        <main className="mx-auto max-w-7xl px-6 py-10 min-h-[70vh] flex items-center justify-center">
-        
-          <div className="w-full max-w-md rounded-xl border-2 border-red-900 bg-red-50 p-6 text-center shadow-[4px_4px_0px_0px_rgba(127,17,17,1)] dark:bg-red-950/20 dark:border-red-500 dark:shadow-[4px_4px_0px_0px_rgba(239,68,68,0.4)]">
-            <h1 className="text-xl font-black uppercase tracking-wider text-red-900 dark:text-red-400">
-              [ 404: Not Found ]
-            </h1>
-            <p className="mt-2 text-sm font-medium text-red-700 dark:text-red-300">
-              The semester you're looking for doesn't exist.
-            </p>
-            <Link
-              href="/"
-              className="mt-4 inline-block rounded-lg border border-red-900 bg-red-900 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-transform active:translate-y-0.5 hover:bg-red-800 dark:border-red-500 dark:bg-red-500 dark:text-black dark:hover:bg-red-400"
-            >
-              Back to Home
-            </Link>
-          </div>
+        <main className="mx-auto flex min-h-[70vh] w-full max-w-3xl flex-col items-center justify-center px-6 py-20">
+          <NotFoundState
+            show404
+            title="Semester Not Found"
+            description={
+              <>
+                We couldn&apos;t find the semester{" "}
+                <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm text-blue-700 dark:bg-slate-900 dark:text-blue-300">
+                  /{semesterSlug}
+                </code>
+                . It may have been renamed or removed — try one of the options below.
+              </>
+            }
+            primary={{ href: "/", label: "← Back to Home" }}
+            secondary={{ href: "/semester/first_semester", label: "Go to 1st Semester" }}
+          />
         </main>
         <Footer />
       </>
@@ -80,7 +81,7 @@ export default async function SemesterPage({ params }: Props) {
         <section className="bg-white py-10 dark:bg-slate-950">
           <div className="mx-auto max-w-7xl px-6">
             
-         
+        
             <div className="mb-6 border-b border-dashed border-slate-200 pb-4 dark:border-slate-800">
               <h2 className="text-xl font-extrabold uppercase tracking-wide text-slate-900 dark:text-slate-100">
                 Subjects
@@ -91,11 +92,11 @@ export default async function SemesterPage({ params }: Props) {
             </div>
 
             {subjects.length === 0 ? (
-              <div className="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-8 text-center dark:border-slate-800 dark:bg-slate-900/20">
-                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                  No subjects found for this semester.
-                </p>
-              </div>
+              <NotFoundState
+                compact
+                title="No Subjects Yet"
+                description="No subjects found for this semester. Check back soon."
+              />
             ) : (
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

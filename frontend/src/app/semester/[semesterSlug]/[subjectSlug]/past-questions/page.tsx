@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getPastPapers } from "@/lib/api/past-questions";
+import NotFoundState from "@/components/common/NotFoundState";
 
 interface Props {
   params: Promise<{
@@ -31,16 +32,11 @@ export default async function PastQuestionsPage({ params }: Props) {
         </p>
       </div>
 
-      <div className="rounded-xl border border-slate-200/80 bg-white p-8 text-center shadow-sm dark:border-slate-800/80 dark:bg-slate-900">
-        <div className="mx-auto max-w-md">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900 dark:text-white">
-            No Past Questions Available
-          </h3>
-          <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-            Examination papers for this subject have not been archived yet.
-          </p>
-        </div>
-      </div>
+      <NotFoundState
+        compact
+        title="No Past Questions Yet"
+        description="Examination papers for this subject haven't been archived yet. Check back soon."
+      />
     </div>
   );
 }
